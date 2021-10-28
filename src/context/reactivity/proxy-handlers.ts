@@ -11,7 +11,6 @@ export const baseHandler: object = {
   get: function (target: object, key: string | symbol, receiver: Object) {
     const res = Reflect.get(target, key, receiver);
 
-    console.log(key);
     recordReactiveCallback(target, 'get', key);
 
     if (isObject(res)) {
@@ -27,11 +26,21 @@ export const baseHandler: object = {
     value: unknown,
     receiver: object
   ) {
+    // eslint-disable-next-line no-debugger
+    debugger;
+    console.log(target, key, value);
     const oldValue = (target as { [key: string | symbol]: unknown })[key];
+
+    if (Array.isArray(target)) {
+      console.log(target);
+      console.log(Number(key) < target.length);
+    }
 
     const result = Reflect.set(target, key, value, receiver);
 
-    if (hasChanged(value, oldValue)) {
+    if (Array.isArray(target) && Number(key) > target.length) {
+      triggerReactiveCallbacks(target, 'set', key, value);
+    } else if (hasChanged(value, oldValue)) {
       triggerReactiveCallbacks(target, 'set', key, value, oldValue);
     }
 

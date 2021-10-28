@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import state from './context/mockState';
@@ -14,17 +15,22 @@ export class MyElement extends LitElement {
     super.connectedCallback();
 
     observe(() => {
+      console.log('effect Array');
       state.testArray.map((x) => console.log(x));
+    });
 
-      console.log('Yeah');
-      this.requestUpdate();
+    observe(() => {
+      console.log('effect String');
+      console.log(state.tester);
     });
   }
 
   private changeState = () => {
-    console.log(state.testArray);
-    state.testArray.push('Yeah');
-    console.log(state.testArray);
+    state.testArray = [...state.testArray];
+
+    state.tester = 'Somebody else';
+
+    this.requestUpdate();
   };
 
   override render() {

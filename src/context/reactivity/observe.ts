@@ -58,7 +58,7 @@ export function triggerReactiveCallbacks(
   type: string,
   key: unknown,
   newValue: unknown,
-  oldValue: unknown
+  oldValue?: unknown
 ) {
   const depsMap = targetMap.get(target);
 
@@ -68,7 +68,9 @@ export function triggerReactiveCallbacks(
 
   const deps: (Dep | undefined)[] = [];
 
-  if (key !== void 0) {
+  if (!isNaN(key as number)) {
+    deps.push(depsMap.get('length'));
+  } else if (key !== void 0) {
     deps.push(depsMap.get(key));
   }
 
