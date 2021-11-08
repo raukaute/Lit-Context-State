@@ -1,48 +1,23 @@
-import { stateDirective } from './state-directive';
-import { DirectiveResult } from 'lit/directive.js';
-import { notEqual, property } from 'lit';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-
-import state from './mockState';
-
-export type ModelCode = 'AD' | 'HE';
+import { modelTemplateFactory } from './model-template-factory.js';
+import { modelTemplate } from './templates/ModelTemplate.js';
+import state from '../_states/index.js';
 
 class ModelController implements ReactiveController {
   host: ReactiveControllerHost;
 
-  private modelCode: ModelCode = 'AD';
-
-  private models: unknown[];
+  private models = state.application.modelMatrix.models;
 
   constructor(host: ReactiveControllerHost) {
     (this.host = host).addController(this);
-
-    this.models = state.application.modelMatrix.models;
   }
 
-  hostConnected() {
-    console.log('Horst connected');
+  hostConnected() {}
 
-    setTimeout(() => this.addModel('Ohne Button'), 1000);
-  }
+  hostDisconnected() {}
 
-  hostDisconnected() {
-    console.log('Horst disconnected');
-  }
-
-  renderModels(...values: unknown[]): DirectiveResult {
-    return stateDirective(this.models);
-  }
-
-  public addModel(model: string) {
-    this.models.push(model);
-  }
-
-  public setModelCode(code: ModelCode): void {
-    const hasChanged = notEqual(code, this.modelCode);
-
-    this.modelCode = code;
-    hasChanged && this.host.requestUpdate();
+  renderModels() {
+    return modelTemplateFactory(this.models, { template: modelTemplate });
   }
 }
 

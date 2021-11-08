@@ -1,3 +1,3 @@
-import { ModelController } from './model-controller';
+import { ModelController } from './model-controller.js';
 
 export { ModelController };

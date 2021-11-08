@@ -45,6 +45,7 @@
     "@web/dev-server-esbuild": "^0.2.14",
     "lit": "^2.0.0",
     "lit-element-simple-context": "^1.0.3",
+    "swagger-typescript-api": "^9.3.1",
     "vue": "^3.2.20"
   },
   "devDependencies": {
